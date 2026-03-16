@@ -3,16 +3,19 @@ let scans = [];
 let panelOpen = false;
 let selectedScan = null;
 let panelAlpha = 0;
-let grainDensity = 10000; // number of tiny dots per frame
- 
+let grainDensity = 10000;
+
 // Loading screen variables
 let loadingTimer = 0;
-let loadingDuration = 180; // frames (~2 seconds at 60fps)
+let loadingDuration = 180;
 let nextCity = null;
- 
+
+// Global menu spacing — change this one number to adjust city spread
+let menuSpacing = 150;
+
 // Glow colors per scan
 const glowColors = ["#FF69B4", "#00BFFF", "#7FFF00"];
- 
+
 // City scans
 const cityScans = {
   copenhagen: [
@@ -28,7 +31,7 @@ const cityScans = {
     {img: "pscans/pscan3.JPG", location: "Prague Castle", date: "Jan 2026"},
   ]
 };
- 
+
 // ---- Scan class ----
 class Scan {
   constructor(imgPath, location, date){
@@ -46,7 +49,7 @@ class Scan {
     this.date = date;
     this.glowColor = random(glowColors);
   }
- 
+
   move(){
     this.x += this.vx + map(noise(this.noiseOffsetX),0,1,-0.2,0.2);
     this.y += this.vy + map(noise(this.noiseOffsetY),0,1,-0.2,0.2);
@@ -55,7 +58,7 @@ class Scan {
     if(this.x < 0 || this.x > width) this.vx *= -1;
     if(this.y < 0 || this.y > height) this.vy *= -1;
   }
- 
+
   display(){
     let d = dist(mouseX, mouseY, this.x, this.y);
     let targetSize = d < this.baseSize ? this.baseSize * 1.5 : this.baseSize;
@@ -74,88 +77,90 @@ class Scan {
     pop();
   }
 }
- 
+
 // ---- Setup ----
 function setup(){
   createCanvas(window.innerWidth, window.innerHeight);
   textAlign(CENTER, CENTER);
-  textFont('Input Mono');
-  textStyle(BOLD);
+  textFont('Space Mono');
+  textStyle(NORMAL);
 }
- 
+
 // ---- Draw grain ----
 function drawGrain(){
   noStroke();
-  fill(0, 60); // CHANGE 2: unified opacity 0.5 (approx 5/255) across all pages
+  fill(0, 60); // <-- grain opacity here, 0-255
   for(let i=0;i<grainDensity;i++){
     let gx = random(width);
     let gy = random(height);
     rect(gx, gy, 1, 1);
   }
 }
- 
+
 // ---- Draw ----
 function draw(){
   background(255);
   drawGrain();
- 
+
   if(state === "menu") drawMenu();
   else if(state === "loading") drawLoading();
   else drawCityWorld();
 }
- 
+
 // ---- Menu ----
 function drawMenu(){
   let centerY = height/2;
+  let centerX = width/2;
+  let cityY = centerY + 40;
+
+  // SCAN ARCHIVE — only this is bold
   textSize(80);
   fill(0);
   textStyle(BOLD);
-  text("SCAN ARCHIVE", width/2, centerY-50);
- 
+  text("SCAN ARCHIVE", centerX, centerY - 50);
+
+  // City names — normal weight, spread using menuSpacing
   textSize(40);
-  textStyle(BOLD);
-  let spacing = 200;
-  let centerX = width/2;
- 
+  textStyle(NORMAL);
+
   // Copenhagen
-  let copenhagenX = centerX - spacing/2;
-  let dC = dist(mouseX, mouseY, copenhagenX, centerY+40);
-  // CHANGE 1: colored back-glow on city titles
+  let copenhagenX = centerX - menuSpacing;
+  let dC = dist(mouseX, mouseY, copenhagenX, cityY);
   push();
   drawingContext.shadowBlur = dC < 100 ? 30 : 18;
   drawingContext.shadowColor = "#00eeff";
   fill(dC < 100 ? "#00eeff" : 0);
-  text("Copenhagen", copenhagenX, centerY+40);
+  text("Copenhagen", copenhagenX, cityY);
   pop();
- 
+
   // Prague
-  let pragueX = centerX + spacing/2;
-  let dP = dist(mouseX, mouseY, pragueX, centerY+40);
+  let pragueX = centerX + menuSpacing;
+  let dP = dist(mouseX, mouseY, pragueX, cityY);
   push();
   drawingContext.shadowBlur = dP < 100 ? 30 : 18;
   drawingContext.shadowColor = "#f912b8";
   fill(dP < 100 ? "#f912b8" : 0);
-  text("Prague", pragueX, centerY+40);
+  text("Prague", pragueX, cityY);
   pop();
 }
- 
+
 // ---- Loading screen ----
 function drawLoading() {
-  // CHANGE 2: grain now renders on the loading screen (drawGrain already called in draw())
   textSize(28);
   fill(0);
   noStroke();
+  textStyle(NORMAL);
   let dots = floor((frameCount / 30) % 4);
   let dotStr = ".".repeat(dots);
   text("Loading Archive" + dotStr, width/2, height/2);
- 
+
   loadingTimer++;
   if (loadingTimer > loadingDuration) {
     state = nextCity;
     loadingTimer = 0;
   }
 }
- 
+
 // ---- Draw star shape ----
 function drawStar(x, y, radius1, radius2, npoints) {
   let angle = TWO_PI / npoints;
@@ -171,7 +176,7 @@ function drawStar(x, y, radius1, radius2, npoints) {
   }
   endShape(CLOSE);
 }
- 
+
 // ---- City scan world ----
 function drawCityWorld(){
   if(scans.length===0){
@@ -180,7 +185,7 @@ function drawCityWorld(){
       scans.push(new Scan(s.img, s.location, s.date));
     }
   }
- 
+
   // network lines
   let lineColor = state === "prague" ? "rgba(249, 18, 184, 0.25)" : "rgba(0,191,255,0.25)";
   stroke(lineColor);
@@ -190,75 +195,92 @@ function drawCityWorld(){
       line(scans[i].x, scans[i].y, scans[j].x, scans[j].y);
     }
   }
- 
+
   for(let s of scans){
     s.move();
     s.display();
   }
- 
+
   if(panelOpen){
     panelAlpha = lerp(panelAlpha, 255, 0.1);
   } else {
     panelAlpha = lerp(panelAlpha, 0, 0.1);
   }
- 
+
   if(panelAlpha > 5 && selectedScan){
-    let lines = [
-      `Location: ${selectedScan.location}`,
-      `Date: ${selectedScan.date}`
-    ];
-    let lineHeight = 20;
-    let panelX = width - 170;
-    let panelY = 180;
+    let panelX = width - 180;
+    let panelY = 170; // top right corner, with some margin
+
+    // measure text to auto-fit star size
+    textSize(13);
+    let longestLine = max(
+      textWidth("Scan Info"),
+      textWidth(selectedScan.location),
+      textWidth(selectedScan.date)
+    );
+    // star inner radius fits the widest text, outer a bit bigger
+    let innerR = longestLine * 0.75;
+    let outerR = innerR * 1.45;
+
+    // draw star
     fill(255, panelAlpha);
     stroke(0, panelAlpha);
     strokeWeight(4);
-    drawStar(panelX, panelY, 90, 140, 7);
+    drawStar(panelX, panelY, innerR, outerR, 7);
     noStroke();
     fill(0, panelAlpha);
+
+    // lay out text evenly within the inner radius
+    let lineH = innerR * 0.32;
+    let totalH = lineH * 4; // 5 lines, 4 gaps
+    let startY = panelY - totalH / 2;
+
     textStyle(BOLD);
-    textSize(14);
-    text("Scan Info", panelX, panelY - 30);
+    textSize(13);
+    text("Scan Info", panelX, startY);
+
     textStyle(NORMAL);
-    textSize(12);
-    for(let i=0;i<lines.length;i++){
-      text(lines[i], panelX, panelY + i * lineHeight);
-    }
+    textSize(13);
+    text("Location:", panelX, startY + lineH);
+    text(selectedScan.location, panelX, startY + lineH * 2);
+    text("Date:", panelX, startY + lineH * 3);
+    text(selectedScan.date, panelX, startY + lineH * 4);
   }
- 
-  // ---- Back button ---- CHANGE 3: no glow, plain fill change on hover only
+
+  // ---- Back button — no glow, hover just darkens ----
   noStroke();
   drawingContext.shadowBlur = 0;
   drawingContext.shadowColor = "transparent";
   fill(dist(mouseX, mouseY, 60, 30) < 20 ? 80 : 0);
   textSize(16);
-  textStyle(BOLD);
+  textStyle(NORMAL);
   text("< Back", 60, 30);
 }
- 
+
 // ---- Mouse click ----
 function mousePressed(){
-  if(state==="menu"){
-    let centerY = height/2 + 20;
-    if(dist(mouseX, mouseY, width/2 - 100, centerY+40)<100){
+  if(state === "menu"){
+    let centerX = width / 2;
+    let cityY = height / 2 + 40;
+    if(dist(mouseX, mouseY, centerX - menuSpacing, cityY) < 120){
       nextCity = "copenhagen";
       state = "loading";
-      scans=[];
-    } else if(dist(mouseX, mouseY, width/2 + 100, centerY+40)<100){
+      scans = [];
+    } else if(dist(mouseX, mouseY, centerX + menuSpacing, cityY) < 120){
       nextCity = "prague";
       state = "loading";
-      scans=[];
+      scans = [];
     }
   } else {
-    if(dist(mouseX, mouseY, 60, 30)<20){
+    if(dist(mouseX, mouseY, 60, 30) < 20){
       state = "menu";
-      scans=[];
+      scans = [];
       selectedScan = null;
       panelOpen = false;
     } else {
       let clickedOnScan = false;
       for(let s of scans){
-        if(dist(mouseX, mouseY, s.x, s.y)<s.size){
+        if(dist(mouseX, mouseY, s.x, s.y) < s.size){
           selectedScan = s;
           panelOpen = true;
           clickedOnScan = true;
@@ -271,7 +293,7 @@ function mousePressed(){
     }
   }
 }
- 
+
 // ---- Window resize ----
 function windowResized(){
   resizeCanvas(window.innerWidth, window.innerHeight);
