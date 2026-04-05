@@ -19,6 +19,9 @@ const glowColors = ["#FF69B4", "#00BFFF", "#7FFF00"];
 // Image zoom
 let imgZoom = 1.0;
 
+// Preloaded images cache
+let preloadedImgs = {};
+
 // Typewriter variables
 let typewriterIndex = 0;
 let typewriterTimer = 0;
@@ -35,11 +38,37 @@ const cityScans = {
     {img: "scans/scan6.JPG", item: "Communist march poster", location: "Nuuks Plads bus stop", date: "March 17, 2026", refCode: "CPH-006"},
     {img: "scans/scan7.JPG", item: "Zoned map of Copenhagen", location: "Jagtvej bike terminal", date: "March 17, 2026", refCode: "CPH-007"},
     {img: "scans/scan8.JPG", item: "Page of tattoo artbook", location: "Soho House Copenhagen", date: "March 19, 2026", refCode: "CPH-008"},
+    {img: "scans/scan9.JPG", item: "Scribble in bathroom", location: "Props Coffee Bar", date: "March 18, 2026", refCode: "CPH-009"},
+    
   ],
   prague: [
-    {img: "pscans/pscan1.JPG", item: "Tabloid", location: "Old Town Square", date: "March 1, 2026", refCode: "PRG-001"},
-    {img: "pscans/pscan2.JPG", item: "Magazine", location: "Charles Bridge", date: "Feb 8, 2026", refCode: "PRG-002"},
-    {img: "pscans/pscan3.JPG", item: "Newspaper", location: "Prague Castle", date: "Jan 13, 2026", refCode: "PRG-003"},
+    {img: "pscans/pscan1.JPG", item: "Receipt", location: "Havelská Koruna", date: "March 25, 2026", refCode: "PRG-001"},
+    {img: "pscans/pscan2.JPG", item: "Flyer", location: "Knihkupectvi Antikvariat Spalena 53", date: "March 25, 2026", refCode: "PRG-002"},
+    {img: "pscans/pscan3.JPG", item: "Note", location: "Knihkupectvi Antikvariat Spalena 53", date: "March 25, 2026", refCode: "PRG-003"},
+    {img: "pscans/pscan4.JPG", item: "Photograph", location: "Knihkupectvi Antikvariat Spalena 53", date: "March 25, 2026", refCode: "PRG-004"},
+    {img: "pscans/pscan5.JPG", item: "Let's Go to the Disco Vinyl", location: "Knihkupectvi Antikvariat Spalena 53", date: "March 25, 2026", refCode: "PRG-005"},
+    {img: "pscans/pscan6.JPG", item: "Charles Aznavour Vinyl", location: "Knihkupectvi Antikvariat Spalena 53", date: "March 25, 2026", refCode: "PRG-006"},
+    {img: "pscans/pscan7.JPG", item: "Art Antiques Magazine", location: "Knihkupectvi Antikvariat Spalena 53", date: "March 25, 2026", refCode: "PRG-007"},
+    {img: "pscans/pscan8.JPG", item: "Cat Playing Cards", location: "LaBula Restuarant", date: "March 25, 2026", refCode: "PRG-008"},
+   {img: "pscans/pscan9.JPG", item: "Vaclav Havel Poster", location: "Maximum Underground Vinyls", date: "March 27, 2026", refCode: "PRG-009"},
+   {img: "pscans/pscan10.JPG", item: "Public Transport Ticket", location: "Dopravní podnik hl. m. Prahy", date: "March 25, 2026", refCode: "PRG-010"},
+   {img: "pscans/pscan11.JPG", item: "Street art", location: "Senovazna, Prague 1", date: "March 26, 2026", refCode: "PRG-011"},
+  {img: "pscans/pscan12.JPG", item: "Street art", location: "Senovazna, Prague 1", date: "March 26, 2026", refCode: "PRG-012"},
+  {img: "pscans/pscan13.JPG", item: "Street art", location: "Senovazna, Prague 1", date: "March 26, 2026", refCode: "PRG-013"},
+  {img: "pscans/pscan14.JPG", item: "Prague is Feminist! Activism Poster", location: "Senovazna, Prague 1", date: "March 26, 2026", refCode: "PRG-014"},
+  {img: "pscans/pscan15.JPG", item: "DiscoBilly Night Flyer", location: "Kollektor bathroom", date: "March 26, 2026", refCode: "PRG-015"},
+  {img: "pscans/pscan16.JPG", item: "Klub Letka Loutex Exhibit Flyer", location: "Kollektor bathroom", date: "March 26, 2026", refCode: "PRG-016"},
+  {img: "pscans/pscan17.JPG", item: "NQ Gallery The question mark must be a sign Exhibit Flyer", location: "Kollektor bathroom", date: "March 26, 2026", refCode: "PRG-017"},
+  {img: "pscans/pscan18.JPG", item: "Místečko Gallery Vernissage Flyer", location: "Kollektor bathroom", date: "March 26, 2026", refCode: "PRG-018"},
+ {img: "pscans/pscan19.JPG", item: "Multiple stickers", location: "Kollektor bathroom", date: "March 26, 2026", refCode: "PRG-019"},
+ {img: "pscans/pscan20.JPG", item: "FCK AFD Sticker", location: "Kollektor bathroom", date: "March 26, 2026", refCode: "PRG-020"},
+{img: "pscans/pscan21.JPG", item: "Wall writing", location: "Kollektor bathroom", date: "March 26, 2026", refCode: "PRG-021"},
+{img: "pscans/pscan22.JPG", item: "EERIE x BRUXA x Fernweh Fuchs2 Event Flyer", location: "Kollektor bathroom", date: "March 26, 2026", refCode: "PRG-022"},
+{img: "pscans/pscan23.JPG", item: "Stojime za prezidentem! Support Flyer", location: "Maximum Underground Vinyls", date: "March 27, 2026", refCode: "PRG-023"},
+{img: "pscans/pscan24.JPG", item: "Latin Core Fuchs2 Event Flyer", location: "Kollektor bathroom", date: "March 26, 2026", refCode: "PRG-024"},
+{img: "pscans/pscan25.JPG", item: "Vinyl related newspaper clipping", location: "Maximum Underground Vinyls", date: "March 27, 2026", refCode: "PRG-025"},
+{img: "pscans/pscan26.JPG", item: "Club entrance wristband", location: "Ankali", date: "March 28, 2026", refCode: "PRG-026"},
+
   ],
   malmo: [
     {img: "mscans/mscan1.JPG", item: "Magazine", location: "Stortorget", date: "March 5, 2026", refCode: "MLM-001"},
@@ -53,7 +82,7 @@ const cityScans = {
 // ---- Scan class ----
 class Scan {
   constructor(imgPath, item, location, date, refCode){
-    this.img = loadImage(imgPath);
+    this.img = preloadedImgs[imgPath];
     this.x = random(window.innerWidth);
     this.y = random(window.innerHeight);
     this.vx = random(-0.05, 0.05);
@@ -98,6 +127,15 @@ class Scan {
     let ih = aspect >= 1 ? this.size / aspect : this.size;
     image(this.img, 0, 0, iw, ih);
     pop();
+  }
+}
+
+// ---- Preload ----
+function preload(){
+  for(let city in cityScans){
+    for(let s of cityScans[city]){
+      preloadedImgs[s.img] = loadImage(s.img);
+    }
   }
 }
 
@@ -397,6 +435,7 @@ function drawCityWorld(){
 
 // ---- Mouse click ----
 function mousePressed(){
+  if(state === "loading") return false;
   if(state === "menu"){
     let centerX = width / 2;
     let cityY = height / 2 + 40;
@@ -404,7 +443,7 @@ function mousePressed(){
       nextCity = "copenhagen";
       state = "loading";
       scans = [];
-    } else if(dist(mouseX, mouseY, centerX + 25, cityY) < 120){
+    } else if(dist(mouseX, mouseY, centerX + 21, cityY) < 120){
       nextCity = "malmo";
       state = "loading";
       scans = [];
@@ -436,6 +475,7 @@ function mousePressed(){
       }
     }
   }
+  return false;
 }
 
 // ---- Window resize ----
