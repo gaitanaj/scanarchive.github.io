@@ -66,8 +66,8 @@ const cityScans = {
 {img: "pscans/pscan22.JPG", item: "EERIE x BRUXA x Fernweh Fuchs2 Event Flyer", location: "Kollektor bathroom", date: "March 26, 2026", refCode: "PRG-022"},
 {img: "pscans/pscan23.JPG", item: "Stojime za prezidentem! Support Flyer", location: "Maximum Underground Vinyls", date: "March 27, 2026", refCode: "PRG-023"},
 {img: "pscans/pscan24.JPG", item: "Latin Core Fuchs2 Event Flyer", location: "Kollektor bathroom", date: "March 26, 2026", refCode: "PRG-024"},
-{img: "pscans/pscan25.JPG", item: "Vinyl related newspaper clipping", location: "Maximum Underground Vinyls", date: "March 27, 2026", refCode: "PRG-025"},
-{img: "pscans/pscan26.JPG", item: "Club entrance wristband", location: "Ankali", date: "March 28, 2026", refCode: "PRG-026"},
+{img: "pscans/pscan25.JPG", item: "Vinyl sales newspaper clipping", location: "Maximum Underground Vinyls", date: "March 27, 2026", refCode: "PRG-025"},
+{img: "pscans/pscan26.jpg", item: "Club entrance wristband", location: "Ankali", date: "March 28, 2026", refCode: "PRG-026"},
 
   ],
   malmo: [
