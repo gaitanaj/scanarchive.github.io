@@ -32,18 +32,20 @@ const cityScans = {
   copenhagen: [
     {img: "scans/scan1.JPG", item: "PET ACT Flyer", location: "Refshaloen 2A Bus Stop", date: "March 14, 2026", refCode: "CPH-001"},
     {img: "scans/scan2.JPG", item: "RIFF Womans Protest Chant Flyer", location: "Norrebro Folkethus", date: "March 8, 2026", refCode: "CPH-002"},
-    {img: "scans/scan3.JPG", item: "Anti-rascism sticker", location: "Elmgade 5C bus shelter wall", date: "March 18, 2026", refCode: "CPH-003"},
+    {img: "scans/scan3.JPG", item: "AFA KBH Sticker", location: "Elmgade 5C bus shelter wall", date: "March 18, 2026", refCode: "CPH-003"},
     {img: "scans/scan4.JPG", item: "RIFF Womans March Protest Chant Flyer", location: "Norrebro FolketHus", date: "Jan 20, 2026", refCode: "CPH-004"},
     {img: "scans/scan5.JPG", item: "Side texture", location: "Borgergade trashcan", date: "Jan 27, 2026", refCode: "CPH-005"},
     {img: "scans/scan6.JPG", item: "Communist march poster", location: "Nuuks Plads bus stop", date: "March 17, 2026", refCode: "CPH-006"},
-    {img: "scans/scan7.JPG", item: "Zoned map of Copenhagen", location: "Jagtvej bike terminal", date: "March 17, 2026", refCode: "CPH-007"},
+    {img: "scans/scan7.JPG", item: "Zoned map of Copenhagen", location: "Jagtvej parking terminal", date: "March 17, 2026", refCode: "CPH-007"},
     {img: "scans/scan8.JPG", item: "Page of tattoo artbook", location: "Soho House Copenhagen", date: "March 19, 2026", refCode: "CPH-008"},
     {img: "scans/scan9.JPG", item: "Scribble in bathroom", location: "Props Coffee Bar", date: "March 18, 2026", refCode: "CPH-009"},
+    {img: "scans/scan10.JPG", item: "Rock Night flyer at Krudttønden", location: "Tagensvej underpass", date: "April 9, 2026", refCode: "CPH-010"},
+    {img: "scans/scan11.JPG", item: "Free Palestine sticker", location: "Guldbergsgade 6", date: "April 12, 2026", refCode: "CPH-011"},
     
   ],
   prague: [
     {img: "pscans/pscan1.JPG", item: "Receipt", location: "Havelská Koruna", date: "March 25, 2026", refCode: "PRG-001"},
-    {img: "pscans/pscan2.JPG", item: "Flyer", location: "Knihkupectvi Antikvariat Spalena 53", date: "March 25, 2026", refCode: "PRG-002"},
+    {img: "pscans/pscan2.JPG", item: "Magazine page", location: "Knihkupectvi Antikvariat Spalena 53", date: "March 25, 2026", refCode: "PRG-002"},
     {img: "pscans/pscan3.JPG", item: "Note", location: "Knihkupectvi Antikvariat Spalena 53", date: "March 25, 2026", refCode: "PRG-003"},
     {img: "pscans/pscan4.JPG", item: "Photograph", location: "Knihkupectvi Antikvariat Spalena 53", date: "March 25, 2026", refCode: "PRG-004"},
     {img: "pscans/pscan5.JPG", item: "Let's Go to the Disco Vinyl", location: "Knihkupectvi Antikvariat Spalena 53", date: "March 25, 2026", refCode: "PRG-005"},
@@ -67,7 +69,7 @@ const cityScans = {
 {img: "pscans/pscan23.JPG", item: "Stojime za prezidentem! Support Flyer", location: "Maximum Underground Vinyls", date: "March 27, 2026", refCode: "PRG-023"},
 {img: "pscans/pscan24.JPG", item: "Latin Core Fuchs2 Event Flyer", location: "Kollektor bathroom", date: "March 26, 2026", refCode: "PRG-024"},
 {img: "pscans/pscan25.JPG", item: "Vinyl sales newspaper clipping", location: "Maximum Underground Vinyls", date: "March 27, 2026", refCode: "PRG-025"},
-{img: "pscans/pscan26.jpg", item: "Club entrance wristband", location: "Ankali", date: "March 28, 2026", refCode: "PRG-026"},
+{img: "pscans/pscan26.JPG", item: "Club entrance wristband", location: "Ankali", date: "March 28, 2026", refCode: "PRG-026"},
 
   ],
   malmo: [
@@ -102,8 +104,8 @@ class Scan {
   move(){
     this.x += this.vx + map(noise(this.noiseOffsetX),0,1,-0.2,0.2);
     this.y += this.vy + map(noise(this.noiseOffsetY),0,1,-0.2,0.2);
-    this.noiseOffsetX += 0.01;
-    this.noiseOffsetY += 0.01;
+    this.noiseOffsetX += 0.005;
+    this.noiseOffsetY += 0.005;
     if(this.x < 0 || this.x > width) this.vx *= -1;
     if(this.y < 0 || this.y > height) this.vy *= -1;
   }
