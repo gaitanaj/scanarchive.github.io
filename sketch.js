@@ -72,13 +72,7 @@ const cityScans = {
 {img: "pscans/pscan26.JPG", item: "Club entrance wristband", location: "Ankali", date: "March 28, 2026", refCode: "PRG-026"},
 
   ],
-  malmo: [
-    {img: "mscans/mscan1.JPG", item: "Magazine", location: "Stortorget", date: "March 5, 2026", refCode: "MLM-001"},
-    {img: "mscans/mscan2.JPG", item: "Newspaper", location: "Möllevångstorget", date: "Feb 20, 2026", refCode: "MLM-002"},
-    {img: "mscans/mscan3.JPG", item: "Tabloid", location: "Triangeln station", date: "Feb 12, 2026", refCode: "MLM-003"},
-    {img: "mscans/mscan4.JPG", item: "Magazine", location: "Lilla Torg kiosk", date: "Jan 30, 2026", refCode: "MLM-004"},
-    {img: "mscans/mscan5.JPG", item: "Newspaper", location: "Malmö Central", date: "Jan 18, 2026", refCode: "MLM-005"},
-  ]
+  malmo: []
 };
 
 // ---- Scan class ----
@@ -167,6 +161,7 @@ function draw(){
 
   if(state === "menu") drawMenu();
   else if(state === "loading") drawLoading();
+  else if(state === "comingsoon") drawComingSoon();
   else drawCityWorld();
 }
 
@@ -234,6 +229,24 @@ function drawLoading() {
     state = nextCity;
     loadingTimer = 0;
   }
+}
+
+// ---- Coming Soon screen ----
+function drawComingSoon() {
+  textSize(28);
+  fill(0);
+  noStroke();
+  textStyle(NORMAL);
+  let dots = floor((frameCount / 30) % 4);
+  let dotStr = ".".repeat(dots);
+  text("Coming Soon" + dotStr, width/2, height/2);
+
+  // Back button
+  drawingContext.shadowBlur = 0;
+  drawingContext.shadowColor = "transparent";
+  fill(dist(mouseX, mouseY, 60, 30) < 20 ? 80 : 0);
+  textSize(16);
+  text("< Back", 60, 30);
 }
 
 // ---- City scan world ----
@@ -438,6 +451,10 @@ function drawCityWorld(){
 // ---- Mouse click ----
 function mousePressed(){
   if(state === "loading") return false;
+  if(state === "comingsoon"){
+    if(dist(mouseX, mouseY, 60, 30) < 20) state = "menu";
+    return false;
+  }
   if(state === "menu"){
     let centerX = width / 2;
     let cityY = height / 2 + 40;
@@ -446,9 +463,7 @@ function mousePressed(){
       state = "loading";
       scans = [];
     } else if(dist(mouseX, mouseY, centerX + 21, cityY) < 120){
-      nextCity = "malmo";
-      state = "loading";
-      scans = [];
+      state = "comingsoon";
     } else if(dist(mouseX, mouseY, centerX + 220, cityY) < 120){
       nextCity = "prague";
       state = "loading";
