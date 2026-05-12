@@ -138,7 +138,7 @@ class Scan {
 function preload(){
   for(let city in cityScans){
     for(let s of cityScans[city]){
-      preloadedImgs[s.img] = loadImage(s.img);
+      preloadedImgs[s.img] = loadImage(s.img, null, () => {});
     }
   }
 }
